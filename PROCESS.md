@@ -1,8 +1,9 @@
 # Process Guide
 
 This is the working process guide for this project.
-It was copied from `claude-project-template` at project start and is now this project's own copy.
 Update it during the project when lessons are learned — do not wait until the end.
+
+> Based on: publicpages-sync project (first use). Refined version lives in `claude-project-template`.
 
 ---
 
@@ -31,7 +32,7 @@ Checklist:
 - [ ] `.gitignore` covers all secret files
 - [ ] Claude can commit and push
 
-Output: Confirmed workspace. `CURRENT_STATE.md` updated.
+Output: Confirmed workspace. `CURRENT_STATE.md` created.
 
 ---
 
@@ -118,7 +119,7 @@ This file is NOT acted on during the current epic — reference only.
 
 ---
 
-### Supporting Steps (CONDITIONAL, run in parallel with above)
+### Supporting Steps (CONDITIONAL)
 
 **Reverse Engineering** — use when an existing codebase needs to be understood first.
 Output: `docs/reverse-engineering.md`
@@ -171,7 +172,7 @@ Claude writes the code. User reviews before merge.
 ### Wrap-up (MANDATORY)
 Before closing the project:
 
-1. **Update this file** — review what was followed, what was skipped, what was added during this project. Update `PROCESS.md` so it reflects what was actually useful.
+1. **Update this file** — review what was followed, what was skipped, what was added. Update `PROCESS.md` to reflect what was actually useful.
 2. **Sync back to template repo** — compare this `PROCESS.md` against `claude-project-template/PROCESS.md`. Propose improvements so the next project starts from a better baseline.
 3. **Update `CURRENT_STATE.md`** — mark the project complete.
 
