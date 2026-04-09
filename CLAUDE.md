@@ -50,6 +50,18 @@ When starting a new project using this template:
 - `PROCESS.md` in this project is a copy of the template repo's `PROCESS.md`
 - It is now this project's own — modify it freely as the project evolves
 
+## Definition of Done
+
+Before saying a task is complete, Claude must check each of these:
+
+- [ ] Code works and is committed + pushed
+- [ ] `docs/decisions.md` updated — if any architectural decision was made
+- [ ] `PROCESS.md` updated — if any lesson was learned
+- [ ] `CURRENT_STATE.md` updated — if the project state changed
+- [ ] Ask user whether any process or instruction improvements should be synced back to `claude-project-template`
+
+This checklist is mandatory, not optional. Do not say "done" without running through it.
+
 ## Project End
 
 Before closing out the project:

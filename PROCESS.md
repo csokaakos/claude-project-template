@@ -186,3 +186,5 @@ Before closing the project:
 4. All decisions are documented in `docs/decisions.md` before implementation begins
 5. Secrets never go to git — use `local.env`
 6. Update `PROCESS.md` when lessons are learned — do not wait until the end
+7. **Architectural decisions require explicit user approval before acting** — if solving a problem requires changing how a component is owned or managed (e.g. moving from CF-managed to manually-managed), stop and ask. Do not fold it into a fix silently.
+8. **Documentation is a gate, not optional** — before saying a task is done, Claude must check `docs/decisions.md`, `PROCESS.md`, and `CURRENT_STATE.md` and update them if needed. "Done" means the docs are also done.
