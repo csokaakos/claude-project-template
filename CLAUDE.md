@@ -34,7 +34,14 @@ Do these in order, every session:
 2. **Read `CURRENT_STATE.md`** — understand where we are and what is next
 3. **Read `NEXT_EPIC.md`** — be aware of upcoming requirements (do not implement, just be aware)
 4. **Read `docs/decisions.md`** — before proposing any design or approach, check if it was already decided. If a proposal conflicts with a logged decision, say: "we settled this before — [decision] because [reason]. Still proceed?"
-5. **Resume** — pick up from where we left off. Do not restart. If unclear, ask.
+5. **Append to `docs/audit.md`** — log session start: timestamp, verbatim user opening message, current phase from `CURRENT_STATE.md`. Create the file if it does not exist yet.
+6. **Check `docs/plan.md`** — if it exists and has unchecked items, resume from the first unchecked item. Do not restart the stage from the beginning.
+7. **Resume** — after reading `CURRENT_STATE.md` and `docs/plan.md`, present a one-line status summary before starting work:
+   - Current phase and step
+   - Last completed action
+   - What comes next
+
+   Then proceed — unless the summary reveals ambiguity, in which case ask first.
 
 ## Workflow
 
@@ -43,6 +50,7 @@ Do these in order, every session:
 - Document decisions before implementing them
 - Record all major decisions in `docs/decisions.md` as they are made
 - Update `PROCESS.md` during the project whenever a lesson is learned — do not wait until the end
+- For any multi-step Construction stage, write a plan to `docs/plan.md` before starting. Mark each step `[x]` immediately on completion — same interaction, never batched at the end.
 
 ## Project Start
 
@@ -58,6 +66,7 @@ Before saying a task is complete, Claude must check each of these:
 - [ ] `docs/decisions.md` updated — if any architectural decision was made
 - [ ] `PROCESS.md` updated — if any lesson was learned
 - [ ] `CURRENT_STATE.md` updated — if the project state changed
+- [ ] `docs/audit.md` updated — session-end entry appended (what was completed, any approvals received)
 - [ ] Ask user whether any process or instruction improvements should be synced back to `claude-project-template`
 
 This checklist is mandatory, not optional. Do not say "done" without running through it.

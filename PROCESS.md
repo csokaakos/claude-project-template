@@ -153,6 +153,7 @@ Use when: the unit introduces new cloud resources not already designed.
 
 ### Step 5 — Code Generation (MANDATORY)
 Claude writes the code. User reviews before merge.
+Write a plan to `docs/plan.md` before starting. Tick each step `[x]` immediately on completion.
 
 ### Step 6 — Build and Test (MANDATORY)
 - Deploy to real infrastructure
@@ -178,6 +179,67 @@ Before closing the project:
 
 ---
 
+## Plan Tracking
+
+File: `docs/plan.md`
+
+**Purpose**: When a stage has multiple sub-steps, write the full plan to a file before starting any work. Check off each step immediately on completion. If the session drops mid-stage, the plan file is the recovery point — resume from the first unchecked item rather than restarting.
+
+**When to use**: Any Construction stage with more than two sub-steps. Always for Code Generation.
+
+**Rules:**
+- Write `docs/plan.md` before starting work — not after
+- Mark each step `[x]` in the same interaction it is completed — no exceptions, no batching
+- On session start: if `docs/plan.md` exists with unchecked items, continue from there
+- Replace `docs/plan.md` when a new stage begins
+
+**Format:**
+
+```
+# Plan: [Stage Name] — [Unit if applicable]
+**Stage**: [Phase] / [Stage]
+**Started**: YYYY-MM-DDTHH:MM:SSZ
+
+## Steps
+- [ ] Step one
+- [ ] Step two
+- [ ] Step three
+```
+
+---
+
+## Audit Log
+
+File: `docs/audit.md`
+
+**Purpose**: Permanent, append-only record of sessions — what was asked, what was decided, what was approved. Enables any future session to reconstruct context without relying on memory.
+
+**Rules:**
+- Always **append**. Never overwrite. Use Edit to add entries, never Write on the whole file.
+- Capture user input **verbatim** — never summarise or paraphrase.
+- Use ISO 8601 timestamps (`YYYY-MM-DDTHH:MM:SSZ`).
+
+**Log these events:**
+
+| Event | When |
+|---|---|
+| Session start | After reading state — include verbatim opening message and current phase |
+| Stage gate | Every user approval or rejection — verbatim response |
+| Major decision | When anything is added to `docs/decisions.md` |
+| Session end | When wrapping up — what was completed |
+
+**Entry format:**
+
+```
+### [Event type] — [short label]
+**Timestamp**: YYYY-MM-DDTHH:MM:SSZ
+**User input**: "[complete raw input]"
+**Action**: [what Claude did or decided]
+**Context**: [phase and stage]
+```
+
+---
+
 ## Key Rules
 
 1. Claude reads `CURRENT_STATE.md`, `NEXT_EPIC.md`, and `docs/decisions.md` at the start of every session
@@ -187,4 +249,4 @@ Before closing the project:
 5. Secrets never go to git — use `local.env`
 6. Update `PROCESS.md` when lessons are learned — do not wait until the end
 7. **Architectural decisions require explicit user approval before acting** — if solving a problem requires changing how a component is owned or managed (e.g. moving from CF-managed to manually-managed), stop and ask. Do not fold it into a fix silently.
-8. **Documentation is a gate, not optional** — before saying a task is done, Claude must check `docs/decisions.md`, `PROCESS.md`, and `CURRENT_STATE.md` and update them if needed. "Done" means the docs are also done.
+8. **Documentation is a gate, not optional** — before saying a task is done, Claude must check `docs/decisions.md`, `PROCESS.md`, `CURRENT_STATE.md`, and `docs/audit.md` and update them if needed. "Done" means the docs are also done.
