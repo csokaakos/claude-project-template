@@ -121,8 +121,22 @@ This file is NOT acted on during the current epic — reference only.
 
 ### Supporting Steps (CONDITIONAL)
 
-**Reverse Engineering** — use when an existing codebase needs to be understood first.
-Output: `docs/reverse-engineering.md`
+### Reverse Engineering (CONDITIONAL)
+Use when: brownfield project and no existing reverse engineering artifacts.
+Skip when: greenfield, or artifacts already exist and are current.
+
+**Goal:** Build a semantically rich picture of the existing system before touching anything.
+
+Produce `docs/reverse-engineering/` with:
+- `business-overview.md` — what the system does, key business transactions end-to-end
+- `architecture.md` — system components, data flows, deployment topology
+- `code-structure.md` — package layout, design patterns, notable conventions
+- `api.md` — REST/internal APIs, data models (skip if not applicable)
+- `tech-stack.md` — languages, frameworks, key libraries, build tools
+- `dependencies.md` — internal and external dependency map
+- `code-quality.md` — test coverage, known debt, linting state
+
+**Wait for explicit approval** before proceeding to Requirements Analysis.
 
 **User Stories** — use when user-facing behaviour needs to be explicitly defined.
 Output: `docs/user-stories.md`
