@@ -31,6 +31,7 @@ Checklist:
 - [ ] Credentials / secrets in place (never committed to git)
 - [ ] `.gitignore` covers all secret files
 - [ ] Claude can commit and push
+- [ ] GitHub CLI (`gh`) installed and logged in — needed to open pull requests
 
 Output: Confirmed workspace. `CURRENT_STATE.md` created.
 
@@ -63,6 +64,8 @@ Topics:
 - Deployment approach
 - Cost estimate
 - Domain / DNS setup
+- Testing approach — which parts have real logic worth automated tests (see Light Testing Rule)
+- CI — what the GitHub Actions check runs on every pull request (tests, or a basic build check if there are no tests)
 
 Output: `docs/workflow-planning.md` — confirmed tooling and approach.
 
@@ -166,13 +169,19 @@ How the NFRs are implemented technically.
 Use when: the unit introduces new cloud resources not already designed.
 
 ### Step 5 — Code Generation (MANDATORY)
-Claude writes the code. User reviews before merge.
-Write a plan to `docs/plan.md` before starting. Tick each step `[x]` immediately on completion.
+1. **Plan first** — write the plan to `docs/plan.md` and present it. **Wait for explicit approval before writing any code.** (Industry term: "plan mode".)
+2. **Branch** — create a branch for the unit (see Branches and Pull Requests).
+3. **Write the code** — tick each plan step `[x]` immediately on completion.
+4. **Tests** — add automated tests where the Light Testing Rule says so.
+5. **AI review** — run a code review (`/code-review`) on the branch before the user sees it. Fix real findings; list anything left open in the pull request.
+6. **Pull request** — push the branch and open a PR. The user reviews it in Step 6.
 
 ### Step 6 — Build and Test (MANDATORY)
+- CI check on the pull request is green (automated tests pass)
 - Deploy to real infrastructure
 - Invoke / trigger the unit manually
 - Confirm behaviour in logs or output
+- User reviews the pull request and approves → merge to `master`
 - User approves before marking unit complete
 
 ---
@@ -188,8 +197,70 @@ Write a plan to `docs/plan.md` before starting. Tick each step `[x]` immediately
 Before closing the project:
 
 1. **Update this file** — review what was followed, what was skipped, what was added. Update `PROCESS.md` to reflect what was actually useful.
-2. **Sync back to template repo** — compare this `PROCESS.md` against `claude-project-template/PROCESS.md`. Propose improvements so the next project starts from a better baseline.
-3. **Update `CURRENT_STATE.md`** — mark the project complete.
+2. **Review `docs/template-candidates.md` with the user** — go through each open entry and ask: sync to the template / keep project-only / drop. Mark each entry with the decision.
+3. **Sync back to template repo** — apply the approved candidates, then compare this `PROCESS.md` against `claude-project-template/PROCESS.md`. Propose any further improvements so the next project starts from a better baseline.
+4. **Update `CURRENT_STATE.md`** — mark the project complete.
+
+The same template-candidates review also runs at the end of each epic (before work on `NEXT_EPIC.md` starts), so candidates do not pile up across long projects.
+
+---
+
+## Branches and Pull Requests
+
+Every change reaches `master` through a pull request (PR) the user has approved. This is how professional teams work, AI-assisted or not.
+
+**Rules:**
+- One branch per unit or per self-contained change: `unit/<name>` or `fix/<short-description>`
+- Claude commits to the branch, pushes it, and opens the PR with `gh pr create`
+- PR description contains: what changed and why, how it was tested, AI review findings still open (if any)
+- The user reviews the PR on GitHub (summary + "Files changed" tab) and approves in chat or on GitHub
+- Merge only after user approval and a green CI check. Claude merges (`gh pr merge`) unless the user prefers to click Merge themselves
+- After merge: delete the branch, pull `master`
+- On session start: check for open PRs and unmerged branches (`gh pr list`) — they are unfinished work
+
+---
+
+## CI (Continuous Integration)
+
+A GitHub Actions workflow (`.github/workflows/ci.yml`) runs automatically on every pull request.
+
+- Set up together with the first unit that has code
+- Runs the automated tests; if the project has no tests, runs a basic build / syntax check instead
+- A red check blocks the merge — fix it before asking for approval
+
+---
+
+## Light Testing Rule
+
+Automated tests are written where they pay off — not for coverage numbers.
+
+| Write tests for | Skip tests for |
+|---|---|
+| Real logic: parsing, calculations, comparisons, decisions, data transformation | Pure infrastructure glue (wiring cloud services together) — the real-deploy check in Build and Test covers it better |
+| Anything likely to be changed again later (guards against regressions — old behaviour breaking silently) | Visual / UI look and layout |
+
+- Tests run with one command, documented in the project README
+- The real-deploy check in Build and Test stays mandatory regardless of tests
+
+---
+
+## Corrections Become Rules
+
+When the user corrects Claude in a way that would apply again (a convention, a preference, a way of working — not a one-off fix like a typo), Claude asks:
+
+> **Keep this as a rule?**
+> **(a)** This project only
+> **(b)** Also for the template
+> **(c)** No
+
+| Answer | What Claude does |
+|---|---|
+| (a) | Adds the rule to this project's `CLAUDE.md` |
+| (b) | Adds the rule to this project's `CLAUDE.md` **and** appends it to `docs/template-candidates.md` |
+| (c) | Nothing |
+
+Each correction is asked about once. The question and answer are logged in `docs/audit.md`.
+Template candidates are reviewed with the user at the end of each epic and at project wrap-up (see Wrap-up).
 
 ---
 
@@ -203,6 +274,7 @@ File: `docs/plan.md`
 
 **Rules:**
 - Write `docs/plan.md` before starting work — not after
+- Present the plan and get explicit user approval before starting work
 - Mark each step `[x]` in the same interaction it is completed — no exceptions, no batching
 - On session start: if `docs/plan.md` exists with unchecked items, continue from there
 - Replace `docs/plan.md` when a new stage begins
@@ -264,3 +336,6 @@ File: `docs/audit.md`
 6. Update `PROCESS.md` when lessons are learned — do not wait until the end
 7. **Architectural decisions require explicit user approval before acting** — if solving a problem requires changing how a component is owned or managed (e.g. moving from CF-managed to manually-managed), stop and ask. Do not fold it into a fix silently.
 8. **Documentation is a gate, not optional** — before saying a task is done, Claude must check `docs/decisions.md`, `PROCESS.md`, `CURRENT_STATE.md`, and `docs/audit.md` and update them if needed. "Done" means the docs are also done.
+9. **Plan before code** — no code is written until the user has approved the plan in `docs/plan.md`.
+10. **Everything goes through a pull request** — no direct commits to `master` for project work. Merge only after user approval and a green CI check.
+11. **Corrections become rules** — when corrected, ask "keep as a rule: this project / also template / no" (see Corrections Become Rules).

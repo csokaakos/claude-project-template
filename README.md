@@ -20,6 +20,8 @@ CURRENT_STATE.md   → project root
 NEXT_EPIC.md       → project root
 PROCESS.md         → project root
 docs/decisions.md  → docs/
+docs/audit.md      → docs/
+docs/template-candidates.md → docs/
 ```
 
 ---
@@ -36,7 +38,7 @@ Claude will read `CLAUDE.md`, `CURRENT_STATE.md`, and `PROCESS.md` and begin Pha
 
 ## After a project ends — how to update this template
 
-1. Compare the finished project's `PROCESS.md` with this repo's `PROCESS.md`
-2. Bring improvements back here
+1. Apply the approved entries from the finished project's `docs/template-candidates.md`
+2. Compare the finished project's `PROCESS.md` with this repo's `PROCESS.md` and bring improvements back here
 3. Update any other template files if the working agreement changed
 4. Commit — the next project starts from this improved baseline
