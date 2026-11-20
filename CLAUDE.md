@@ -35,6 +35,7 @@ Do these in order, every session:
 2. **Read `CURRENT_STATE.md`** — understand where we are and what is next
 3. **Read `NEXT_EPIC.md`** — be aware of upcoming requirements (do not implement, just be aware)
 4. **Read `docs/decisions.md`** — before proposing any design or approach, check if it was already decided. If a proposal conflicts with a logged decision, say: "we settled this before — [decision] because [reason]. Still proceed?"
+   - Before asking the user a design question, also search `docs/requirements.md` and the approved design docs (application design, earlier functional designs) — settled answers often live there, not in the decision log. A settled answer found there is logged in `docs/decisions.md` when it is used, so the log grows complete
 5. **Append to `docs/audit.md`** — log session start: timestamp, verbatim user opening message, current phase from `CURRENT_STATE.md`. Create the file if it does not exist yet.
 6. **Check `docs/plan.md`** — if it exists and has unchecked items, resume from the first unchecked item. Do not restart the stage from the beginning. Also check for open pull requests and unmerged branches (`gh pr list`) — they are unfinished work.
 7. **Resume** — after reading `CURRENT_STATE.md` and `docs/plan.md`, present a one-line status summary before starting work:
@@ -52,6 +53,7 @@ Do these in order, every session:
 - Record all major decisions in `docs/decisions.md` as they are made
 - Update `PROCESS.md` during the project whenever a lesson is learned — do not wait until the end
 - For any multi-step Construction stage, write a plan to `docs/plan.md` and get user approval before starting. Mark each step `[x]` immediately on completion — same interaction, never batched at the end.
+- Every technical choice (language, libraries, storage, tools) is confirmed with the user separately and logged in `docs/decisions.md` — a blanket approval of a document does not count.
 - When the user corrects Claude in a way that would apply again, ask: "Keep this as a rule? (a) this project only, (b) also for the template, (c) no." (a) → this `CLAUDE.md`; (b) → this `CLAUDE.md` + `docs/template-candidates.md`; (c) → nothing. Ask once per correction.
 
 ## Project Start
